@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+        <script type="text/javascript" src="main.js"></script>
+<title>
+        EPMR-TCSR
+</title>
+</head>
+<body>
+    <div class=main>
+        <div class="searchdiv">
+            <input type="text" name="search" placeholder="Фильтр по подстроке в имени товара">
+            <button name="Search">Search</button>
+            <button class="addnewbtn" name="Add New">Add New</button>
+        </div>
+            <div class="table">
+                <div id="productsTable" class="tablebody">
+                    <div class="tablemenu">
+                        <div >
+                            Name
+                            <div class="triangle"></div>
+                        </div>
+                        <div class="price">
+                            Price
+                            <div class="triangle"></div>
+                        </div>
+                        <div class="actiondiv">
+                            Actions
+                        </div>
+                    </div>
+                
+                    <div class="item">
+                            <div>
+                                Name
+                                <div class="count">
+                                    <div>5</div>
+                                </div>
+                            </div>
+                            <div class="price">
+                                $ Price
+                            </div>
+                            <div class="actiondiv">
+                                <button name="edit">Edit</button>
+                                <button name="delete">Delete</button>
+                            </div>
+                    </div>
+                    <div class="item">
+                            <div>
+                                Name
+                                <div class="count">
+                                    <div>5</div>
+                                </div>
+                            </div>
+                            <div class="price">
+                                $ Price
+                            </div>
+                            <div class="actiondiv">
+                                <button name="edit">Edit</button>
+                                <button name="delete">Delete</button>
+                            </div>
+                    </div>
+                    <div class="item">
+                            <div>
+                                Name
+                                <div class="count">
+                                    <div>5</div>
+                                </div>
+                            </div>
+                            <div class="price">
+                                $ Price
+                            </div>
+                            <div class="actiondiv">
+                                <button name="edit">Edit</button>
+                                <button name="delete">Delete</button>
+                            </div>
+                    </div>
+                                 
+                </div>
+                </div>
+            <div class="addItem">
+                <div class="headerItemAdd">
+                    <div>
+                        Name:  * Requiared field
+                    </div>
+                    <div class="addItemCountText">
+                        Count:
+                    </div>
+                    <div class="addItemPriceText">
+                        Price:
+                    </div>
+                </div>
+                <div class="itemadd">
+                        <input id="nameAdd" type="text" name="search" class="nameAdd" >
+                        <input id="countAdd" type="text" name="search" class="countAdd">
+                        <input id="priceAdd" type="text" name="search" class="priceAdd" >
+                        <button id="addBtn" class="addUpdatebtn" name="AddUpdate">Add</button>
+                </div>
+            </div>
+    </div> 
+</body>
+</html>
