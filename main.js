@@ -45,9 +45,19 @@ function deleteBtnClickHendler(){
 
 }
 
+
 function addCountInputHendler(){
-    this.value = this.value.replace (/[^0-9]+$/, '');
+    this.value = this.value.replace(/[^0-9]+$/, '');
 }
+
+function addPriceInputHendler(){
+    this.value = this.value.replace(/[^\d.]*/g, '').replace(/([.])[.]+/g, '$1').replace(/^[^\d]*(\d+([.]\d{0,2})?).*$/g, '$1');
+}
+
+function addPriceInputHendlerBlur(){
+    this.value = '$'+ this.value.replace(/(\d{1,3}(?=(\d{3})+(?:\.\d|\b)))/g,"\$1"+',');
+}
+
 
 function addDataToTable() {
     var addData = [3];
@@ -70,23 +80,29 @@ function checkDataName(name){
 }
 
 function checkDataCount(name){
-};
+}
 
 function checkDataPrice(name){
 
 };
 
 function onLoadHandler() {
-    var productList = createProductList();
+    var productList, addBtnElement, editBtnElement, deleteBtnElement, addCountInput, addPriceInput;
+    productList = createProductList();
     addProductElementToTable(productList[0].name, productList[0]["count"], productList[0]["price"] );
-    var addBtnElement = document.getElementById("addBtn");
-    var editBtnElement = document.getElementById("edit");
-    var deleteBtnElement = document.getElementById("delete");
+
+    addBtnElement = document.getElementById("addBtn");
+    editBtnElement = document.getElementById("edit");
+    deleteBtnElement = document.getElementById("delete");
+    addCountInput = document.getElementById("countAdd");
+    addPriceInput = document.getElementById("priceAdd");
+
     addBtnElement.addEventListener("click", addBtnClickHendler);
     editBtnElement.addEventListener("click", editBtnClickHendler);
     deleteBtnElement.addEventListener("click", deleteBtnClickHendler);
-    var addCountInput = document.getElementById("countAdd");
     addCountInput.addEventListener("keyup", addCountInputHendler);
+    addPriceInput.addEventListener("keyup", addPriceInputHendler);
+    addPriceInput.addEventListener("blur", addPriceInputHendlerBlur);
 }
 
 function addProductElementToTable(name, count, price){
