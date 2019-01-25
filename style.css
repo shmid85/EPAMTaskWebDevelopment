@@ -197,3 +197,10 @@
     font-size: 20px;
     padding: 1px 11px;
 }
+
+.alert div{
+    font-size: 10px;
+    color : red;
+    padding-left: 10px;
+    padding-top: 2px;
+}

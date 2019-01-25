@@ -26,14 +26,16 @@ Product.prototype = {
 
 function createProductList(){
     return [
-        new Product("melon", 4, 620),
-        new Product("watermelon", 6, 400),
-        new Product("ham", 3, 950)
+        new Product("melon", 4, 620000),
+        new Product("watermelon", 6, 400000),
+        new Product("ham", 3, 9500000)
     ]
 }
 
 function addBtnClickHendler() {
-    var addData =  addDataToTable();
+
+    var addData =  CheckAddData();
+/*    addDataToproductTableId();*/
     addProductElementToTable(addData[0], addData[1], addData[2]);
 }
 
@@ -45,7 +47,6 @@ function deleteBtnClickHendler(){
 
 }
 
-
 function addCountInputHendler(){
     this.value = this.value.replace(/[^0-9]+$/, '');
 }
@@ -55,28 +56,53 @@ function addPriceInputHendler(){
 }
 
 function addPriceInputHendlerBlur(){
-    this.value = '$'+ this.value.replace(/(\d{1,3}(?=(\d{3})+(?:\.\d|\b)))/g,"\$1"+',');
+   this.value = this.value.replace(/[^\d.]*/g, '').replace(/([.])[.]+/g, '$1').replace(/^[^\d]*(\d+([.]\d{0,2})?).*$/g, '$1');
+   this.value = '$'+ this.value.replace(/(\d{1,3}(?=(\d{3})+(?:\.\d|\b)))/g,"\$1"+',');
 }
 
+function CheckAddData() {
+    var addData, name, count, price;
+    addData = [3];
+    name = document.getElementById("nameAdd").value;
+    count = document.getElementById("countAdd").value;
+    price = document.getElementById("priceAdd").value;
 
-function addDataToTable() {
-    var addData = [3];
-    var name = document.getElementById("nameAdd").value;
-    var count = document.getElementById("countAdd").value;
-    var price = document.getElementById("priceAdd").value;
     addData[0] = checkDataName(name);
     addData[1] = count;
     addData[2] = price;
     return addData;
 }
 
+/*Добавление продукта в массив товаров*/
+function addDataToProductTableId(){
+
+}
+
 function checkDataName(name){
     var pattern = /^[\s]+$/;
-    if((name !== "") && (name.length<16) && (!pattern.test(name))){
-        return name;
-    }else {
-        alert("ФОКУС НА НЕВЕРНОЕ");
+    if ((name === "")||(pattern.test(name))){
+        AddNameAlert("The field can't be empty");
+        return;
     }
+    if (name.length>15){
+        AddNameAlert("Lenght of the field can't be more than 15 letters");
+        return;
+    }
+    AddNameAlert("");
+    return name;
+}
+
+function AddNameAlert(alert){
+    var alertName, alertNameText;
+    alertName = document.getElementById("alertName");
+    if((!!alert)||(alert!=="")){
+        alertNameText = document.createTextNode(alert);
+        alertName.innerHTML(alertNameText);
+    }else {
+        alertNameText = document.createTextNode("");
+        alertName.innerHTML(alertNameText);
+    }
+
 }
 
 function checkDataCount(name){
@@ -84,12 +110,14 @@ function checkDataCount(name){
 
 function checkDataPrice(name){
 
-};
+}
 
 function onLoadHandler() {
     var productList, addBtnElement, editBtnElement, deleteBtnElement, addCountInput, addPriceInput;
     productList = createProductList();
     addProductElementToTable(productList[0].name, productList[0]["count"], productList[0]["price"] );
+    addProductElementToTable(productList[1].name, productList[1]["count"], productList[1]["price"] );
+    addProductElementToTable(productList[2].name, productList[2]["count"], productList[2]["price"] );
 
     addBtnElement = document.getElementById("addBtn");
     editBtnElement = document.getElementById("edit");
