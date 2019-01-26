@@ -1,11 +1,7 @@
-var productTableId = "productsTable";
+var productTableId = "productsTable", productList, currentAddPriceNotFiltred, currentID=0;
 window.onload = onLoadHandler;
 
-function isInteger(num){
-    return (num ^ 0) === num;
-}
-
-function Product(name, count, price){
+function Product(name, count, price, id){
     if("string" !== typeof(name))
         throw new TypeError("name isn't string");
 
@@ -14,126 +10,149 @@ function Product(name, count, price){
 
     if("number" !== typeof(price))
         throw new TypeError("price isn't number");
+    if(!isInteger(id))
+        throw new TypeError("id isn't interger");
 
     this.name = name;
     this.count = count;
     this.price = price;
+    this.id = id;
 }
 
 Product.prototype = {
     constructor : Product
 };
 
+/*Создание продуктов по умолчанию*/
 function createProductList(){
     return [
-        new Product("melon", 4, 620000),
-        new Product("watermelon", 6, 400000),
-        new Product("ham", 3, 9500000)
+        new Product("Melon", 4, 620000, currentIDIncrease()),
+        new Product("Watermelon", 6, 400000, currentIDIncrease()),
+        new Product("Ham", 3, 9500000, currentIDIncrease())
     ]
 }
 
-function addBtnClickHendler() {
-
-    var addData =  CheckAddData();
-/*    addDataToproductTableId();*/
-    addProductElementToTable(addData[0], addData[1], addData[2]);
+/*Увеличение текущего ID продукта*/
+function currentIDIncrease(){
+    return ++currentID;
 }
 
-function editBtnClickHendler(){
-
-}
-
-function deleteBtnClickHendler(){
+function editBtnClickHandler(){
 
 }
 
-function addCountInputHendler(){
-    this.value = this.value.replace(/[^0-9]+$/, '');
+/*Кнопка удалить элемент*/
+function deleteBtnClickHandler(){
+    deleteProductElementFromTableAndArray(this.id.replace("delete", ''));
+}
+/*Потеря фокуса поля name*/
+function addNameInputHandlerBlur(){
+    checkDataName(document.getElementById("nameAdd").value);
 }
 
-function addPriceInputHendler(){
-    this.value = this.value.replace(/[^\d.]*/g, '').replace(/([.])[.]+/g, '$1').replace(/^[^\d]*(\d+([.]\d{0,2})?).*$/g, '$1');
+/*Ввод в поле Count*/
+function addCountInputHandler(){
+    this.value = formatInput(this.value, "count");
 }
 
-function addPriceInputHendlerBlur(){
-   this.value = this.value.replace(/[^\d.]*/g, '').replace(/([.])[.]+/g, '$1').replace(/^[^\d]*(\d+([.]\d{0,2})?).*$/g, '$1');
-   this.value = '$'+ this.value.replace(/(\d{1,3}(?=(\d{3})+(?:\.\d|\b)))/g,"\$1"+',');
+/*Ввод в поле Price*/
+function addPriceInputHandler(){
+    this.value = formatInput(this.value,"price");
 }
 
-function CheckAddData() {
-    var addData, name, count, price;
-    addData = [3];
+/*Потеря фокуса полем Price*/
+function addPriceInputHandlerBlur(){
+    this.value = formatInput(this.value, "priceBlur");
+}
+
+/*Нажатие кнопки Add*/
+function addBtnClickHandler() {
+    var name, count, price;
     name = document.getElementById("nameAdd").value;
-    count = document.getElementById("countAdd").value;
+    count = +(document.getElementById("countAdd").value);
     price = document.getElementById("priceAdd").value;
+    addProduct(name, count, price);
+}
 
-    addData[0] = checkDataName(name);
-    addData[1] = count;
-    addData[2] = price;
-    return addData;
+/*Добавление товара в таблицу и массив продуктов*/
+function addProduct(name, count, price){
+    if(checkDataName(name)&&(checkDataCount(count))&&(checkDataPrice(currentAddPriceNotFiltred))){
+        addDataToProductList(name, count, currentAddPriceNotFiltred);
+        addProductElementToTable(name, count, price, currentID);
+    }
 }
 
 /*Добавление продукта в массив товаров*/
-function addDataToProductTableId(){
-
+function addDataToProductList(name, count , price){
+    currentIDIncrease();
+    productList.push(new Product(name, count, price, currentID));
 }
-
+/*Проверка занчения введеного в поле Name*/
 function checkDataName(name){
     var pattern = /^[\s]+$/;
     if ((name === "")||(pattern.test(name))){
-        AddNameAlert("The field can't be empty");
-        return;
+        document.getElementById("alertName").innerHTML="The field can't be empty";
+        return false;
     }
     if (name.length>15){
-        AddNameAlert("Lenght of the field can't be more than 15 letters");
-        return;
+        document.getElementById("alertName").innerHTML="Lenght of the field can't be more than 15 letters";
+        return false;
     }
-    AddNameAlert("");
-    return name;
+    document.getElementById("alertName").innerHTML="";
+    return true;
 }
 
-function AddNameAlert(alert){
-    var alertName, alertNameText;
-    alertName = document.getElementById("alertName");
-    if((!!alert)||(alert!=="")){
-        alertNameText = document.createTextNode(alert);
-        alertName.innerHTML(alertNameText);
-    }else {
-        alertNameText = document.createTextNode("");
-        alertName.innerHTML(alertNameText);
-    }
-
+/*Проверка значения в поле Count*/
+function checkDataCount(count){
+    if( count !== "")
+        return true;
+    return false;
+}
+/*Проверка значения в поле Price*/
+function checkDataPrice(price){
+    if(price !== "")
+        return true;
+    return false;
 }
 
-function checkDataCount(name){
+/*Функция очистки полей Add при нажатии кнопки AddNew*/
+function addNewBtnClickHandler(){
+    document.getElementById("nameAdd").value="";
+    document.getElementById("countAdd").value="";
+    document.getElementById("priceAdd").value="";
+    document.getElementById("addBtn").innerHTML="Add";
 }
 
-function checkDataPrice(name){
-
-}
-
+/*Запуск функции при запуске*/
 function onLoadHandler() {
-    var productList, addBtnElement, editBtnElement, deleteBtnElement, addCountInput, addPriceInput;
+    var addBtnElement, editBtnElement, deleteBtnElement, i;
     productList = createProductList();
-    addProductElementToTable(productList[0].name, productList[0]["count"], productList[0]["price"] );
-    addProductElementToTable(productList[1].name, productList[1]["count"], productList[1]["price"] );
-    addProductElementToTable(productList[2].name, productList[2]["count"], productList[2]["price"] );
 
+    for(i=0; i< productList.length; i++) {
+        addProductElementToTable(productList[i].name, productList[i]["count"], formatInput(productList[i]["price"].toString(), "priceBlur"), productList[i].id);
+    }
+    createAddBlock();
+}
+
+/*Добавление блока Add*/
+function createAddBlock(){
+    var addCountInput, addPriceInput, addNewBtn, addNameInput, addBtnElement;
     addBtnElement = document.getElementById("addBtn");
-    editBtnElement = document.getElementById("edit");
-    deleteBtnElement = document.getElementById("delete");
     addCountInput = document.getElementById("countAdd");
     addPriceInput = document.getElementById("priceAdd");
-
-    addBtnElement.addEventListener("click", addBtnClickHendler);
-    editBtnElement.addEventListener("click", editBtnClickHendler);
-    deleteBtnElement.addEventListener("click", deleteBtnClickHendler);
-    addCountInput.addEventListener("keyup", addCountInputHendler);
-    addPriceInput.addEventListener("keyup", addPriceInputHendler);
-    addPriceInput.addEventListener("blur", addPriceInputHendlerBlur);
+    addNewBtn = document.getElementById("addnewbtn");
+    addNameInput = document.getElementById("nameAdd");
+    addNameInput.addEventListener("blur", addNameInputHandlerBlur);
+    addCountInput.addEventListener("keyup", addCountInputHandler);
+    addCountInput.addEventListener("keyup", addCountInputHandler);
+    addPriceInput.addEventListener("keyup", addPriceInputHandler);
+    addPriceInput.addEventListener("blur", addPriceInputHandlerBlur);
+    addNewBtn.addEventListener("click", addNewBtnClickHandler);
+    addBtnElement.addEventListener("click", addBtnClickHandler);
 }
 
-function addProductElementToTable(name, count, price){
+/*Добавление элемента в таблицу с товаром*/
+function addProductElementToTable(name, count, price, productID){
     var table, tableItem, tableItemDiv, tableTextName, tableItemDivCount, tableItemDivCountDiv,
         tableTextItemDivCountDiv, tableItemDivPrice, tableTextItemDivPrice, tableItemActionDivButtonEdit,
         tableItemActionDiv, tableItemActionDivButtonDelete, tableItemActionDivButtonEditText,
@@ -154,11 +173,12 @@ function addProductElementToTable(name, count, price){
     tableItemActionDivButtonDeleteText = document.createTextNode("Delete");
 
     tableItem.className = "item";
+    tableItem.id = "item" + productID;
     tableItemDivCount.className = "count";
     tableItemDivPrice.className = "price";
     tableItemActionDiv.className = "actiondiv";
-    tableItemActionDivButtonEdit.id = "edit";
-    tableItemActionDivButtonDelete.id = "delete";
+    tableItemActionDivButtonEdit.id = "edit" + productID;
+    tableItemActionDivButtonDelete.id = "delete"+productID;
 
     tableItemDivPrice.appendChild(tableTextItemDivPrice);
     tableItemDivCountDiv.appendChild(tableTextItemDivCountDiv);
@@ -176,4 +196,23 @@ function addProductElementToTable(name, count, price){
     tableItem.appendChild(tableItemDivPrice);
     tableItem.appendChild(tableItemActionDiv);
     table.appendChild(tableItem);
+
+    tableItemActionDivButtonEdit.addEventListener("click", editBtnClickHandler);
+    tableItemActionDivButtonDelete.addEventListener("click", deleteBtnClickHandler);
+}
+
+/*Удаление товара с таблицы и массива*/
+function deleteProductElementFromTableAndArray(productID){
+    deleteProductElementFromTable(productID);
+    deleteProductElementFromArray(productID);
+}
+/*Удаление товара с таблицы*/
+function deleteProductElementFromTable(productID){
+    var tableItem;
+    tableItem = document.getElementById("item" + productID);
+    tableItem.parentNode.removeChild(tableItem);
+}
+/*Удаление товара из массива*/
+function deleteProductElementFromArray(productID){
+    productList.splice(findInArray(productList, productID));
 }
