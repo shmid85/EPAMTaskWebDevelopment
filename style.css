@@ -40,14 +40,19 @@
 .tablemenu div, .item div{
     float: left;
 }
+
+/*Очистка обтекания слева для блоков*/
 .tablemenu, .item{
     clear: both;
 }
 
-.tablemenu div:first-child{
+/*Поле Name в шапке таблицы товара*/
+.tablemenu .tablemenuName{
     width: 320px;
 }
-.item div:first-child{
+
+/*Поле Name в item таблицы товара*/
+.item .itemName{
     padding-left: 20px;
     padding-right: 20px;
     width: 280px;
@@ -55,7 +60,7 @@
     text-decoration: underline;
 }
 
-/* Таблица товаров : бордеры и стиль текста */
+/* Шапка таблицы товаров : бордеры и стиль текста */
 .tablemenu div{
     border-top: 1px solid #999;
     font-weight: bold;
@@ -63,40 +68,49 @@
     padding: 20px 0;
     position: relative;
 }
-.item div{
+
+/*Отступы сверху снизу и позиция
+*блока itemName и price в item
+ */
+.item .itemName, .item .price{
     padding: 20px 0;
     position: relative;
 }
+
+/*Отступ слева для текста в поле Name в item*/
+.item .itemName{
+    padding-left:40px;
+}
+
+/*Нижняя и левая граница ячеек таблицы*/
 .tablemenu div, .item div{
     border-bottom: 1px solid #999;
     border-left: 1px solid #999;
 
 }
+
+/*Правая граница ячеек action таблицы*/
 .tablemenu .actiondiv, .item .actiondiv{
     border-right: 1px solid #999;
 }
 
-/* Добавление треугольника фильтра вниз*/
+/* Добавление треугольника фильтра вверх*/
 .tablemenu div .triangle{
-    background-image: url("t_up.png");
-    background-repeat: no-repeat;
-    background-size: 12px;
+    border: 10px solid transparent;
+    border-top: 14px solid #888;
     position: absolute;
-    border: none;
-    bottom: -5px; /* Положение от нижнего края */
-    right: -290px;
+    bottom: -30px;
+    right: 20px;
 }
 
-/* Добавление треугольника фильтра вверх*/
-/*
-.tablemenu div .triangle{
-    background-image: url("t_down.png");
-    background-repeat: no-repeat;
-    background-size: 12px;
-    position: absolute;
-    border: none;
-    bottom: -5px;
-    right: -290px; 
+/* Добавление треугольника фильтра вниз*/
+/*.tablemenu div .triangle{
+ 	border: 10px solid transparent;
+	border-bottom: 14px solid #888;
+	position: absolute;
+	bottom: 24px;
+    right: 20px;
+
 }
 */
 
@@ -117,40 +131,37 @@
     text-align: center;
 }
 
+/* Отступы внутри кнопок действия*/
 .actiondiv button{
     padding: 1px 20px;
 }
+
+/*Расстояние между кнопками в блоке действий*/
 .actiondiv button:first-child{
-    margin-left: 5px;
+    /*margin-left: 5px;*/
     margin-right: 5px;
 }
-/* Добавление счетчика товара фон*/
-.item .count{
-    background-image: url("count.png");
-    background-repeat: no-repeat;
-    background-size: 26px;
-    position: absolute;
-    border: none;
-    bottom: -1px; /* Положение от нижнего края */
-    right: -275px;
 
-    /*width: 100px;*/
-    /*height: 100px;*/
-    /*background: red;*/
-    /*-moz-border-radius: 50px;*/
-    /*-webkit-border-radius: 50px;*/
-    /*border-radius: 50px;*/
+/*Фон счетчика count в таблице*/
+.item .itemName .count{
+    background: #888;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 7px;
+    right: 15px;
 }
 
-/*Счетчик текст*/
-.item div .count div{
-    position: absolute;
-    bottom: 0; /* Положение от нижнего края */
-    right: 11px;
+/*Счетчик count в таблице*/
+.item .itemName .count div{
     border: none;
-    text-decoration: none;
-    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    text-align: center;
     color: #fff;
+    font-weight: bold;
 }
 
 /*Текст ниже табицы над блоком добавить\обновить*/
@@ -158,27 +169,37 @@
     float: left;
 }
 
-/* Блок добавить\обновить */
+/* Блок добавить\обновить очистка обтекания*/
 .itemadd{
     clear: both;
 }
 
+/*Блок добавление товара внизу*/
 .addItem{
     font-size: 18px;
     padding-top:70px;
 }
+
+/*Текст над блоком добавление товара внизу*/
 .headerItemAdd{
     padding-bottom: 35px;
 }
+
+/*Выравнивание текста над блоком добавление товара внизу*/
 .headerItemAdd, .itemadd{
     padding-left:10px;
 }
+
+/*Выравнивание текста над блоком добавление товара внизу*/
 .headerItemAdd .addItemCountText{
     margin-left: 82px;
 }
+
+/*Выравнивание текста над блоком добавление товара внизу*/
 .headerItemAdd .addItemPriceText{
     margin-left: 10px;
 }
+
 /*Блок добавить\обновить Поле имя*/
 .nameAdd{
     width:260px;
@@ -199,12 +220,14 @@
     font-size: 20px;
     margin-right: 5px;
 }
+
 /* Блок добавить\обновить Кнопка добавить\обновить*/
 .addUpdateBtn{
     font-size: 20px;
     padding: 1px 11px;
 }
 
+/*Блок предупреждения в блоке добавления товара ниже Name: * Requiared field*/
 .alert div{
     font-size: 10px;
     color : red;
