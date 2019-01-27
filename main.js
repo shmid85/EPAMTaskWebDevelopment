@@ -350,6 +350,7 @@ function deleteProductElementFromArray(productID){
     productList.splice(findInArray(productList, productID), 1);
 }
 
+/*Обновление товара в массиве и таблице*/
 function updateProductToProductListAndTable(name, count, price){
     changeProductInProductList(name, count, price);
     deleteProductElementFromTable(currentIdDeletedOnUpdate);
