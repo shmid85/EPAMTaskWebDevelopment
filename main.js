@@ -174,6 +174,7 @@ function addProductElementToTable(name, count, price, productID){
 
     tableItem.className = "item";
     tableItem.id = "item" + productID;
+    tableItemDiv.className = "itemName";
     tableItemDivCount.className = "count";
     tableItemDivPrice.className = "price";
     tableItemActionDiv.className = "actiondiv";
