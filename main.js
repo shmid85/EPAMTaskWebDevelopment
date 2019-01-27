@@ -1,6 +1,7 @@
-var productTableId = "productsTable", productList, currentAddPriceNotFiltred, currentID=0;
+var productTableId = "productsTable", productList, currentAddPriceNotFiltred, currentID=0, currentIdDeletedOnUpdate=-1;
 window.onload = onLoadHandler;
 
+/*Конструктор продукта*/
 function Product(name, count, price, id){
     if("string" !== typeof(name))
         throw new TypeError("name isn't string");
@@ -19,6 +20,7 @@ function Product(name, count, price, id){
     this.id = id;
 }
 
+/*Прототип продукта*/
 Product.prototype = {
     constructor : Product
 };
@@ -38,13 +40,34 @@ function currentIDIncrease(){
 }
 
 function editBtnClickHandler(){
+    var id = this.id.replace("edit", ''), pattern = /^[\s]+$/;
+    document.getElementById("addBtn").innerHTML="Update";
+    addItemToItemAdd(id);
+    currentIdDeletedOnUpdate=id;
+}
 
+/*Добавление товара в поле add*/
+function addItemToItemAdd(id){
+    var name, count, price;
+    name = document.getElementById("nameAdd");
+    count = document.getElementById("countAdd");
+    price = document.getElementById("priceAdd");
+    name.value = productList[findInArray(productList, id)].name;
+    count.value = productList[findInArray(productList, id)].count;
+    price.value = productList[findInArray(productList, id)].price;
 }
 
 /*Кнопка удалить элемент*/
 function deleteBtnClickHandler(){
-    deleteProductElementFromTableAndArray(this.id.replace("delete", ''));
+    var id = (this.id.replace("delete", ''));
+    var index = findInArray(productList, id);
+    if(confirm("Do you realy want to delete "+ productList[index].name +"?"))
+        deleteProductElementFromTableAndArray(id);
+
+    // if(confirm("Do you realy want to delete the item?"))
+    //     deleteProductElementFromTableAndArray(this.id.replace("delete", ''));
 }
+
 /*Потеря фокуса поля name*/
 function addNameInputHandlerBlur(){
     checkDataName(document.getElementById("nameAdd").value);
@@ -66,19 +89,33 @@ function addPriceInputHandlerBlur(){
 }
 
 /*Нажатие кнопки Add*/
-function addBtnClickHandler() {
+function addUpdateBtnClickHandler() {
     var name, count, price;
     name = document.getElementById("nameAdd").value;
     count = +(document.getElementById("countAdd").value);
     price = document.getElementById("priceAdd").value;
-    addProduct(name, count, price);
+
+    if(this.innerHTML === "Update"){
+        updateProductToProductListAndTable(name, count, formatInput(price, "priceBlur"));
+    }else{
+        addProductToProductListAndTable(name, count, formatInput(price, "priceBlur"));
+    }
+    addNewBtnClickHandler();
 }
 
 /*Добавление товара в таблицу и массив продуктов*/
-function addProduct(name, count, price){
+function addProductToProductListAndTable(name, count, price){
     if(checkDataName(name)&&(checkDataCount(count))&&(checkDataPrice(currentAddPriceNotFiltred))){
         addDataToProductList(name, count, currentAddPriceNotFiltred);
         addProductElementToTable(name, count, price, currentID);
+    }
+}
+
+function changeProductInProductList(name, count, price) {
+    if(checkDataName(name)&&(checkDataCount(count))&&(checkDataPrice(currentAddPriceNotFiltred))){
+        productTableId[findInArray(productList, currentIdDeletedOnUpdate)].name = name;
+        productTableId[findInArray(productList, currentIdDeletedOnUpdate)].count = count;
+        productTableId[findInArray(productList, currentIdDeletedOnUpdate)].price = price;
     }
 }
 
@@ -87,18 +124,23 @@ function addDataToProductList(name, count , price){
     currentIDIncrease();
     productList.push(new Product(name, count, price, currentID));
 }
+
 /*Проверка занчения введеного в поле Name*/
 function checkDataName(name){
-    var pattern = /^[\s]+$/;
+    var pattern = /^[\s]+$/, alert = document.getElementById("alertName"),
+        nameAdd = document.getElementById("nameAdd");
     if ((name === "")||(pattern.test(name))){
-        document.getElementById("alertName").innerHTML="The field can't be empty";
+        alert.innerHTML="The field can't be empty";
+        nameAdd.style.border="1px solid red";
         return false;
     }
     if (name.length>15){
-        document.getElementById("alertName").innerHTML="Lenght of the field can't be more than 15 letters";
+        alert.innerHTML="Lenght of the field can't be more than 15 letters";
+        nameAdd.style.border="1px solid red";
         return false;
     }
-    document.getElementById("alertName").innerHTML="";
+    alert.innerHTML="";
+    nameAdd.style.border="1px solid #999";
     return true;
 }
 
@@ -108,6 +150,7 @@ function checkDataCount(count){
         return true;
     return false;
 }
+
 /*Проверка значения в поле Price*/
 function checkDataPrice(price){
     if(price !== "")
@@ -125,7 +168,7 @@ function addNewBtnClickHandler(){
 
 /*Запуск функции при запуске*/
 function onLoadHandler() {
-    var addBtnElement, editBtnElement, deleteBtnElement, i;
+    var i;
     productList = createProductList();
 
     for(i=0; i< productList.length; i++) {
@@ -148,7 +191,7 @@ function createAddBlock(){
     addPriceInput.addEventListener("keyup", addPriceInputHandler);
     addPriceInput.addEventListener("blur", addPriceInputHandlerBlur);
     addNewBtn.addEventListener("click", addNewBtnClickHandler);
-    addBtnElement.addEventListener("click", addBtnClickHandler);
+    addBtnElement.addEventListener("click", addUpdateBtnClickHandler);
 }
 
 /*Добавление элемента в таблицу с товаром*/
@@ -207,13 +250,22 @@ function deleteProductElementFromTableAndArray(productID){
     deleteProductElementFromTable(productID);
     deleteProductElementFromArray(productID);
 }
+
 /*Удаление товара с таблицы*/
 function deleteProductElementFromTable(productID){
     var tableItem;
     tableItem = document.getElementById("item" + productID);
     tableItem.parentNode.removeChild(tableItem);
 }
+
 /*Удаление товара из массива*/
 function deleteProductElementFromArray(productID){
-    productList.splice(findInArray(productList, productID));
+    productList.splice(findInArray(productList, productID), 1);
 }
+
+function updateProductToProductListAndTable(name, count, price){
+    changeProductInProductList(name, count, price);
+    deleteProductElementFromTable(currentIdDeletedOnUpdate);
+    addProductElementToTable(name, count, price, currentIdDeletedOnUpdate);
+}
+

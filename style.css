@@ -180,6 +180,10 @@
     padding-top:70px;
 }
 
+/*Поля ввода*/
+.itemadd input{
+    border: 1px solid #999;
+}
 /*Текст над блоком добавление товара внизу*/
 .headerItemAdd{
     padding-bottom: 35px;
