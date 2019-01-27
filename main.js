@@ -103,6 +103,82 @@ function addUpdateBtnClickHandler() {
     addNewBtnClickHandler();
 }
 
+/*Кнопка поиска*/
+function searchBtnClickHandler(){
+    var filtredProductList, subString = document.getElementById("searchInput").value, pattern = /^[\s]+$/, i;
+    if((subString !== "")&&(!pattern.test(subString))){
+        filtredProductList = filtArray(productList, subString);
+        for (i = 0; i < productList.length; i++){
+            deleteProductElementFromTable(productList[i].id)
+            }
+        for (i = 0; i < filtredProductList.length; i++){
+            addProductElementToTable(filtredProductList[i].name, filtredProductList[i].count, formatInput(filtredProductList[i].price.toString(), "priceBlur"), filtredProductList[i].id);
+        }
+    }else{
+        for (i = 0; i < productList.length; i++){
+            deleteProductElementFromTable(productList[i].id)
+        }
+        for (i = 0; i < productList.length; i++){
+            addProductElementToTable(productList[i].name, productList[i].count, formatInput(productList[i].price.toString(), "priceBlur"), productList[i].id);
+        }
+    }
+}
+
+/*Треугольник сортировки Name*/
+function triangleNameClickHandler(){
+    var triangleName = document.getElementById("triangleName");
+    if(triangleName.className == "triangleDown"){
+        triangleName.className="triangleUp";
+        sortArrayOfName("up");
+    }else{
+        triangleName.className="triangleDown";
+        sortArrayOfName("down");
+    }
+}
+
+/*Треугольник сортировки Price*/
+function trianglePriceClickHandler(){
+    var trianglePrice = document.getElementById("trianglePrice");
+    if(trianglePrice.className == "triangleDown"){
+        trianglePrice.className="triangleUp";
+        sortArrayOfPrice("up");
+    }else{
+        trianglePrice.className="triangleDown";
+        sortArrayOfPrice("down");
+    }
+}
+
+/*Сортировка по имени*/
+function sortArrayOfName(sortDirection){
+    var sortedProductList, i;
+    if( sortDirection == "down")
+        sortedProductList = sortArrayNameDown(productList);
+    else
+        sortedProductList = sortArrayNameUp(productList);
+
+    for (i = 0; i < productList.length; i++){
+        deleteProductElementFromTable(productList[i].id)
+    }
+    for (i = 0; i < sortedProductList.length; i++){
+        addProductElementToTable(sortedProductList[i].name, sortedProductList[i].count, formatInput(sortedProductList[i].price.toString(), "priceBlur"), sortedProductList[i].id);
+    }
+}
+/*Сортировка по цене*/
+function sortArrayOfPrice(sortDirection){
+    var sortedProductList, i;
+    if( sortDirection == "down")
+        sortedProductList = sortArrayPriceDown(productList);
+    else
+        sortedProductList = sortArrayPriceUp(productList);
+
+    for (i = 0; i < productList.length; i++){
+        deleteProductElementFromTable(productList[i].id)
+    }
+    for (i = 0; i < sortedProductList.length; i++){
+        addProductElementToTable(sortedProductList[i].name, sortedProductList[i].count, formatInput(sortedProductList[i].price.toString(), "priceBlur"), sortedProductList[i].id);
+    }
+}
+
 /*Добавление товара в таблицу и массив продуктов*/
 function addProductToProductListAndTable(name, count, price){
     if(checkDataName(name)&&(checkDataCount(count))&&(checkDataPrice(currentAddPriceNotFiltred))){
@@ -132,15 +208,18 @@ function checkDataName(name){
     if ((name === "")||(pattern.test(name))){
         alert.innerHTML="The field can't be empty";
         nameAdd.style.border="1px solid red";
+        nameAdd.style.color = "red";
         return false;
     }
     if (name.length>15){
         alert.innerHTML="Lenght of the field can't be more than 15 letters";
         nameAdd.style.border="1px solid red";
+        nameAdd.style.color = "red";
         return false;
     }
     alert.innerHTML="";
     nameAdd.style.border="1px solid #999";
+    nameAdd.style.color = "black";
     return true;
 }
 
@@ -174,16 +253,20 @@ function onLoadHandler() {
     for(i=0; i< productList.length; i++) {
         addProductElementToTable(productList[i].name, productList[i]["count"], formatInput(productList[i]["price"].toString(), "priceBlur"), productList[i].id);
     }
-    createAddBlock();
+    AddEventListenersToElements();
 }
 
 /*Добавление блока Add*/
-function createAddBlock(){
-    var addCountInput, addPriceInput, addNewBtn, addNameInput, addBtnElement;
+function AddEventListenersToElements(){
+    var addCountInput, addPriceInput, addNewBtn, addNameInput, addBtnElement ,searchBtn,
+        trianglePrice, triangleName;
+    searchBtn = document.getElementById("searchBtn");
+    triangleName = document.getElementById("triangleName");
+    trianglePrice = document.getElementById("trianglePrice");
     addBtnElement = document.getElementById("addBtn");
     addCountInput = document.getElementById("countAdd");
     addPriceInput = document.getElementById("priceAdd");
-    addNewBtn = document.getElementById("addnewbtn");
+    addNewBtn = document.getElementById("addnewBtn");
     addNameInput = document.getElementById("nameAdd");
     addNameInput.addEventListener("blur", addNameInputHandlerBlur);
     addCountInput.addEventListener("keyup", addCountInputHandler);
@@ -192,6 +275,9 @@ function createAddBlock(){
     addPriceInput.addEventListener("blur", addPriceInputHandlerBlur);
     addNewBtn.addEventListener("click", addNewBtnClickHandler);
     addBtnElement.addEventListener("click", addUpdateBtnClickHandler);
+    searchBtn.addEventListener("click", searchBtnClickHandler);
+    triangleName.addEventListener("click", triangleNameClickHandler);
+    trianglePrice.addEventListener("click", trianglePriceClickHandler);
 }
 
 /*Добавление элемента в таблицу с товаром*/
@@ -255,7 +341,8 @@ function deleteProductElementFromTableAndArray(productID){
 function deleteProductElementFromTable(productID){
     var tableItem;
     tableItem = document.getElementById("item" + productID);
-    tableItem.parentNode.removeChild(tableItem);
+    if(tableItem !== undefined && tableItem !== null)
+        tableItem.parentNode.removeChild(tableItem);
 }
 
 /*Удаление товара из массива*/
@@ -268,4 +355,3 @@ function updateProductToProductListAndTable(name, count, price){
     deleteProductElementFromTable(currentIdDeletedOnUpdate);
     addProductElementToTable(name, count, price, currentIdDeletedOnUpdate);
 }
-

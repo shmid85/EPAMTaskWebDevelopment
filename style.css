@@ -95,7 +95,7 @@
 }
 
 /* Добавление треугольника фильтра вверх*/
-.tablemenu div .triangle{
+.tablemenu div .triangleDown{
     border: 10px solid transparent;
     border-top: 14px solid #888;
     position: absolute;
@@ -104,15 +104,13 @@
 }
 
 /* Добавление треугольника фильтра вниз*/
-/*.tablemenu div .triangle{
+.tablemenu div .triangleUp{
  	border: 10px solid transparent;
 	border-bottom: 14px solid #888;
 	position: absolute;
 	bottom: 24px;
     right: 20px;
-
 }
-*/
 
 /* Блок цена*/
 .tablemenu .price, .item .price{

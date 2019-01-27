@@ -14,12 +14,6 @@ function isInteger(num){
     return (num ^ 0) === num;
 }
 
-function showProductList(){
-     for(var i =0; i < productList.length; i++){
-     alert(productList[i].name +" "+ productList[i].count+ " " + productList[i].price + " " + productList[i].id );
-     }
-}
-
 /*Форматирование текста в поле ввода*/
 function formatInput(inputString, input){
     if(input === "priceBlur"){
@@ -38,32 +32,56 @@ function formatInput(inputString, input){
     return inputString;
 }
 
-/*Сортировка массива по имени*/
-function sortArrayName(array){
-    return array.sort(compareNumericName);
+/*Сортировка массива по имени вверх*/
+function sortArrayNameUp(array){
+    return array.sort(compareNumericNameUp);
 }
-/*Сортировка массива по цене*/
-function sortArrayPrice(array){
-    return array.sort(compareNumericPrice);
+/*Сортировка массива по цене вверх*/
+function sortArrayPriceUp(array){
+    return array.sort(compareNumericPriceUp);
 }
 
-/*Предикат для сортировки имени*/
-function compareNumericName(productA, productB) {
+/*Сортировка массива по имени вниз*/
+function sortArrayNameDown(array){
+    return array.sort(compareNumericNameDown);
+}
+/*Сортировка массива по цене вниз*/
+function sortArrayPriceDown(array){
+    return array.sort(compareNumericPriceDown);
+}
+
+/*Предикат для сортировки имени вверх*/
+function compareNumericNameUp(productA, productB) {
     if (productA.name.toLowerCase() > productB.name.toLowerCase()) return 1;
     if (productA.name.toLowerCase() < productB.name.toLowerCase()) return -1;
 }
 
-/*Предикат для сортировки цены*/
-function compareNumericPrice(productA, productB) {
+/*Предикат для сортировки цены вверх*/
+function compareNumericPriceUp(productA, productB) {
     if (productA.price > productB.price) return 1;
     if (productA.price < productB.price) return -1;
 }
 
+/*Предикат для сортировки имени вверх*/
+function compareNumericNameDown(productA, productB) {
+    if (productA.name.toLowerCase() > productB.name.toLowerCase()) return -1;
+    if (productA.name.toLowerCase() < productB.name.toLowerCase()) return 1;
+}
+
+/*Предикат для сортировки цены вверх*/
+function compareNumericPriceDown(productA, productB) {
+    if (productA.price > productB.price) return -1;
+    if (productA.price < productB.price) return 1;
+}
 /*Фильтрация массива (название товара)*/
 function filtArray(array, substringName){
-    array.filter(function(product){
-            if(!product.name.indexOf(substringName) !== -1)
+    var pattern = /^[\s]+$/;
+    if((substringName === "")||(pattern.test(substringName)))
+        return [];
+    return array.filter(function(product){
+            if(product.name.toLowerCase().indexOf(substringName.toLowerCase()) !== -1)
                 return true;
+
             return false;
         }
     )
