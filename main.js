@@ -189,9 +189,12 @@ function addProductToProductListAndTable(name, count, price){
 
 function changeProductInProductList(name, count, price) {
     if(checkDataName(name)&&(checkDataCount(count))&&(checkDataPrice(currentAddPriceNotFiltred))){
-        productTableId[findInArray(productList, currentIdDeletedOnUpdate)].name = name;
-        productTableId[findInArray(productList, currentIdDeletedOnUpdate)].count = count;
-        productTableId[findInArray(productList, currentIdDeletedOnUpdate)].price = price;
+        // productTableId[findInArray(productList, currentIdDeletedOnUpdate)].name = name;
+        // productTableId[findInArray(productList, currentIdDeletedOnUpdate)].count = count;
+        // productTableId[findInArray(productList, currentIdDeletedOnUpdate)].price = price;
+        productList[findInArray(productList, currentIdDeletedOnUpdate)].name = name;
+        productList[findInArray(productList, currentIdDeletedOnUpdate)].count = count;
+        productList[findInArray(productList, currentIdDeletedOnUpdate)].price = price;
     }
 }
 
